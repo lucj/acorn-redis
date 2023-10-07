@@ -1,0 +1,27 @@
+services: db: image: "ghcr.io/lucj/acorn-redis:v#.#.#"
+
+containers: redis: {
+  image: "redis:7.2.1-alpine"
+  ports: publish: "80/http"
+	consumes: ["db"]
+  entrypoint: ["/bin/sh", "-c", "/check-db.sh"]
+	env: {
+    HOST: "@{service.db.address}"
+    USER: "@{service.db.secrets.user.username}"
+    PASS: "@{service.db.secrets.user.password}"
+	}
+  files: "/check-db.sh": """
+    echo "Will try to connect"
+    while true; do
+      echo "=> testing DB connection..."
+      redis-cli -u "redis://${USER}:${PASS}@${DHOST}" ping 
+      if [ $? -eq 0 ]; then
+        break
+      else
+        sleep 5
+      fi
+    done
+    echo "connected to the DB"
+    sleep 3600
+  """
+}

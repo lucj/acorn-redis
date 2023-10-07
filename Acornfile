@@ -1,0 +1,110 @@
+name:        "Redis Acorn"
+description: "Acorn providing Redis"
+readme:      "./README.md"
+info:        localData.info
+icon:        "./icon.png"
+
+args: {
+  // Name of the default user
+  dbUser: "myuser"
+}
+
+services: db: {
+	default:   true
+	container: "redis"
+	secrets: ["user"]
+	ports: "6379"
+}
+
+jobs: "create-user-secret": {
+  build: context: "."
+  env: {
+    DB_USER: args.dbUser
+    DB_PASS: "secret://password/token"
+  }
+  events: ["create"]
+}
+
+containers: {
+  redis: {
+    name: "Redis"
+    description: "Container running a Redis server"
+    image: "redis:7.2.1-alpine"
+    entrypoint: ["redis-server", "--aclfile", "/etc/users.acl"]
+    ports: publish: "6379/tcp"
+    files: {
+      "/etc/users.acl": "secret://users-acl/template"
+    }
+    probes: [
+      {
+        type:                "liveness"
+        initialDelaySeconds: 10
+        timeoutSeconds: 5
+        tcp:{
+          url: "tcp://localhost:6379"
+        }
+      },
+      {
+        type:                "readiness"
+        initialDelaySeconds: 10
+        exec: command: localData.readinessProbeCommand
+      },
+    ]
+  }
+}
+
+secrets: {
+  password: {
+    name: "password to be used for the redis user"
+    type: "token"
+    params: {
+        length: 16
+        characters: "abcdedfhifj01234567890"
+    }
+    data: token: ""
+  }
+}
+
+secrets: {
+  "user": {
+    type: "generated"
+    params: job: "create-user-secret"
+  }
+}
+
+secrets: {
+    "users-acl": {
+        type: "template"
+        data: {
+            template: """
+            user default on nopass ~* +@all
+            user ${secret://user/username} +@all ~* >${secret://user/password}
+            """
+        }
+    }
+}
+
+localData: readinessProbeCommand: [
+  "bash",
+  "-c",
+  "redis-cli -u redis://${secret://user/username}:${secret://user/password}@localhost:6379 ping"
+]
+
+localData: info: """
+	## Usage
+
+	services: db: {
+		external: "ghcr.io/lucj/acorn-redis:v#.#.#"
+	}
+
+	containers: app: {
+		image: "app-image"
+		env: {
+		  DB_HOST: "@{@{service.}db.address}"
+		  DB_PORT: "@{@{service.}db.port.6379}"
+		  DB_USER: "@{@{service.}db.secrets.user.username}"
+		  DB_PASS: "@{@{service.}db.secrets.user.password}"
+		}
+	}
+	"""
+
