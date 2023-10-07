@@ -35,6 +35,9 @@ containers: {
     files: {
       "/etc/users.acl": "secret://users-acl/template"
     }
+    dirs: {
+      "/data": "volume://db-data"
+    }
     probes: [
       {
         type:                "liveness"
@@ -51,6 +54,10 @@ containers: {
       },
     ]
   }
+}
+
+volumes: {
+  "db-data": {}
 }
 
 secrets: {
