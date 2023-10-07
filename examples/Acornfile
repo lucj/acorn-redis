@@ -14,7 +14,7 @@ containers: redis: {
     echo "Will try to connect"
     while true; do
       echo "=> testing DB connection..."
-      redis-cli -u "redis://${USER}:${PASS}@${DHOST}" ping 
+      redis-cli -u "redis://${USER}:${PASS}@${HOST}" ping 
       if [ $? -eq 0 ]; then
         break
       else
