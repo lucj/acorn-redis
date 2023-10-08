@@ -94,7 +94,7 @@ secrets: {
 localData: readinessProbeCommand: [
   "bash",
   "-c",
-  "redis-cli -u redis://${secret://user/username}:${secret://user/password}@localhost:6379 ping"
+  "redis-cli ping"
 ]
 
 localData: info: """
