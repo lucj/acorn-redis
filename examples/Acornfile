@@ -2,7 +2,6 @@ services: db: image: "ghcr.io/lucj/acorn-redis:v#.#.#"
 
 containers: redis: {
   image: "redis:7.2.1-alpine"
-  ports: publish: "80/http"
 	consumes: ["db"]
   entrypoint: ["/bin/sh", "-c", "/check-db.sh"]
 	env: {
