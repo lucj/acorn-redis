@@ -92,7 +92,7 @@ secrets: {
 }
 
 localData: readinessProbeCommand: [
-  "bash",
+  "/bin/sh",
   "-c",
   "redis-cli ping"
 ]
