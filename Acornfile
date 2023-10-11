@@ -85,7 +85,7 @@ secrets: {
         data: {
             template: """
             user default on nopass ~* +@all
-            user ${secret://user/username} +@all ~* >${secret://user/password}
+            user ${secret://user/username} on +@all ~* >${secret://user/password}
             """
         }
     }
