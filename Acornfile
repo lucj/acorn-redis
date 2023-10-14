@@ -5,24 +5,13 @@ info:        localData.info
 icon:        "./icon.png"
 
 args: {
-  // Name of the default user
-  dbUser: "myuser"
 }
 
 services: db: {
 	default:   true
 	container: "redis"
-	secrets: ["user"]
+	secrets: ["admin"]
 	ports: "6379"
-}
-
-jobs: "create-user-secret": {
-  build: context: "."
-  env: {
-    DB_USER: args.dbUser
-    DB_PASS: "secret://password/token"
-  }
-  events: ["create"]
 }
 
 containers: {
@@ -31,7 +20,7 @@ containers: {
     description: "Container running a Redis server"
     image: "redis:7.2.1-alpine"
     entrypoint: ["redis-server", "--aclfile", "/etc/users.acl"]
-    ports: publish: "6379/tcp"
+    ports: "6379/tcp"
     files: {
       "/etc/users.acl": "secret://users-acl/template"
     }
@@ -61,8 +50,8 @@ volumes: {
 }
 
 secrets: {
-  password: {
-    name: "password to be used for the redis user"
+  "admin": {
+    name: "password to be used for the admin user"
     type: "token"
     params: {
         length: 16
@@ -73,19 +62,11 @@ secrets: {
 }
 
 secrets: {
-  "user": {
-    type: "generated"
-    params: job: "create-user-secret"
-  }
-}
-
-secrets: {
     "users-acl": {
         type: "template"
         data: {
             template: """
-            user default on nopass ~* +@all
-            user ${secret://user/username} on +@all ~* >${secret://user/password}
+            user default on >${secret://admin/token} ~* +@all
             """
         }
     }
@@ -94,7 +75,7 @@ secrets: {
 localData: readinessProbeCommand: [
   "/bin/sh",
   "-c",
-  "redis-cli ping"
+  "redis-cli --pass ${secret://admin/token} ping"
 ]
 
 localData: info: """
@@ -109,8 +90,7 @@ localData: info: """
 		env: {
 		  DB_HOST: "@{@{service.}db.address}"
 		  DB_PORT: "@{@{service.}db.port.6379}"
-		  DB_USER: "@{@{service.}db.secrets.user.username}"
-		  DB_PASS: "@{@{service.}db.secrets.user.password}"
+		  DB_PASS: "@{@{service.}db.secrets.admin.token}"
 		}
 	}
 	"""
