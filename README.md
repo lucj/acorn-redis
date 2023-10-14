@@ -8,7 +8,7 @@ The Acorn image of this service is hosted in the GitHub container registry: *ghc
 
 ## Usage
 
-In the examples folder you can find a sample application using this service. It consists in a Python backend based on the FastAPI library which returns the number of times the "/" routes has been called (this value is saved in Redis and increment for each request).
+In the examples folder you can find a sample application using this service. It consists in a Python backend based on the FastAPI library which returns the number of times the "/" routes has been called (this value is saved in Redis and incremented for each request).
 
 This example can be run with the following command (make sure to run it from the *examples* folder)
 
