@@ -1,14 +1,14 @@
-services: db: image: "ghcr.io/lucj/acorn-redis:v#.#.#"
+services: db: image: "ghcr.io/acorn-io/redis:v#.#.#-#"
 
 containers: app: {
-  build: {
-    context: "."
-    target: "dev"
-  }
+	build: {
+		context: "."
+		target:  "dev"
+	}
 	consumes: ["db"]
-  ports: publish: "8000/http"
+	ports: publish: "8000/http"
 	env: {
-    REDIS_HOST: "@{service.db.address}"
-    REDIS_PASS: "@{service.db.secrets.admin.token}"
+		REDIS_HOST: "@{service.db.address}"
+		REDIS_PASS: "@{service.db.secrets.admin.token}"
 	}
 }
