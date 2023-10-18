@@ -28,7 +28,7 @@ After a few tens of seconds you will be returned an http endpoint you can use to
 
 Using this endpoint we can access the application and see the counter (which value is persisted in the Redis underlying database) been incremented.
 
-![UI](./images/ui.png)
+![UI](./examples/images/ui.png)
 
 ## Deploy to the sandbox
 
