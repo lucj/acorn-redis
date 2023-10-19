@@ -81,9 +81,7 @@ localData: readinessProbeCommand: [
 localData: info: """
 	## Usage
 
-	services: db: {
-		external: "ghcr.io/lucj/acorn-redis:v#.#.#"
-	}
+	services: db: image: "ghcr.io/acorn-io/redis:v#.#.#-#"
 
 	containers: app: {
 		image: "app-image"
