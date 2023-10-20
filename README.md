@@ -30,8 +30,21 @@ Using this endpoint we can access the application and see the counter (which val
 
 ![UI](./examples/images/ui.png)
 
-## Deploy to the sandbox
 
-Instead of managing your own Acorn installation, you can easily deploy this application in the Acorn Sandbox, which is the free SaaS offering provided by Acorn. The only pre-requisite before doing so is to make sure you have a GitHub account as this is the one used to authenticate in the Sandbox.
+## Deploy the app to your Acorn Sandbox
 
-When running in the Sandbox, an application will be automatically shutdown after 2 hours. If you need your app to keep running, you may consider to upgrade to the Acorn Pro plan.
+Instead of managing your own Acorn installation, you can deploy this application in the Acorn Sandbox, the free SaaS offering provided by Acorn. Access to the sandbox requires only a GitHub account, which is used for authentication.
+
+To deploy the Redis example app in your own sandbox, you can:
+
+- use the following link [https://beta.acorn.io/run/ghcr.io/acorn-io/redis/examples:v7.2.1-1](https://beta.acorn.io/run/ghcr.io/acorn-io/redis/examples:v7.2.1-1)
+
+- flash this QR Code
+
+![Sample app](./examples/images/qrcode.png)
+
+Each method will trigger the launch of the app (you will be required to authenticate using your GitHub account).
+
+## Upgrading your Sandbox
+
+An application running in the Sandbox will automatically shut down after 2 hours, but you can use the Acorn Pro plan to remove the time limit and gain additional functionalities.
