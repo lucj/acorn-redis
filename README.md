@@ -64,16 +64,6 @@ After a few tens of seconds an http endpoint will be returned. Using this endpoi
 
 Instead of managing your own Acorn installation, you can deploy this application in the Acorn Sandbox, the free SaaS offering provided by Acorn. Access to the sandbox requires only a GitHub account, which is used for authentication.
 
-To deploy the Redis example app in your own sandbox, you can:
-
-- use the following link [https://beta.acorn.io/run/ghcr.io/acorn-io/redis/examples:v7.2.1-1](https://beta.acorn.io/run/ghcr.io/acorn-io/redis/examples:v7.2.1-1)
-
-- flash this QR Code
-
-![Sample app](./examples/images/qrcode.png)
-
-Each method will trigger the launch of the app (you will be required to authenticate using your GitHub account).
-
-## Upgrading your Sandbox
+[![Run in Acorn](https://beta.acorn.io/v1-ui/run/badge?image=ghcr.io+acorn-io+redis+examples:v%23.%23.%23-%23)](https://beta.acorn.io/run/ghcr.io/acorn-io/redis/examples:v%23.%23.%23-%23)
 
 An application running in the Sandbox will automatically shut down after 2 hours, but you can use the Acorn Pro plan to remove the time limit and gain additional functionalities.
