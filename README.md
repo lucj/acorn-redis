@@ -20,7 +20,7 @@ Currently this Acorn does not have any configuration options, but some will be a
 
 The [examples folder](https://github.com/acorn-io/redis/tree/main/examples) contains a sample application using this Service. This app consists in a Python backend based on the FastAPI library, it displays a web page indicating the number of times the application was called, a counter is saved in the underlying Redis database and incremented with each request. The screenshot below shows the UI of the example application. 
 
-![UI](./images/ui.png)
+![UI](./examples/images/ui.png)
 
 To use the Redis Service, we first define a *service* property in the Acornfile of the application:
 
