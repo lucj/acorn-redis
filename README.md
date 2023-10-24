@@ -4,34 +4,66 @@ Redis is an in-memory data store, used as a database, cache, and message broker.
 
 ## Redis as an Acorn Service
 
-This Acorn provides a Redis database as an Acorn Service.  It can be used to easily get a Redis database for your application during development. The current service runs a single Redis container backed by a persistent volume and define a password for the default admin user.
+The Acornfile used to create a Redis based Acorn Service is available in the GitHub repository at [https://github.com/acorn-io/redis](https://github.com/acorn-io/redis). This service triggers the creation of a Redis database running in a single container which can easily be used by an application during development.
 
-## Acorn image
+This Redis instance:
+- is backed by a persistent volume
+- uses a default (auto generated) password for the admin user
 
-The Acorn image of this service is hosted in GitHub container registry: *ghcr.io/acorn-io/redis*
+The Acorn image of this service is hosted in GitHub container registry at [ghcr.io/acorn-io/redis](ghcr.io/acorn-io/redis). 
 
-## Service configuration options
-
-Currently this Acorn does not have any configuration options, but some could be added later on if needed.
+Currently this Acorn does not have any configuration options, but some will be added later on like:
+- the possibility to indicate the Redis version to use
+- the size of the persistent volume
 
 ## Usage
 
-In the examples folder you can find a sample application using this Service. It consists in a Python backend based on the FastAPI library which returns the number of times the application was called. This incremental value is saved in the underlying Redis database and incremented with each request.
-
-This example can be run with the following command (make sure to run it from the *examples* folder)
-
-```
-acorn run -n api
-```
-
-After a few tens of seconds you will be returned an http endpoint you can use to acces the application.
-
-Using this endpoint we can access the application and see the counter (which value is persisted in the Redis underlying database) been incremented.
+The [examples folder](https://github.com/acorn-io/redis/tree/main/examples) contains a sample application using this Service. This app consists in a Python backend based on the FastAPI library, it displays a web page indicating the number of times the application was called, a counter is saved in the underlying Redis database and incremented with each request. The screenshot below shows the UI of the example application. 
 
 ![UI](./examples/images/ui.png)
 
-## Deploy to the sandbox
+To use the Redis Service, we first define a *service* property in the Acornfile of the application:
 
-Instead of managing your own Acorn installation, you can easily deploy this application in the Acorn Sandbox, which is the free SaaS offering provided by Acorn. The only pre-requisite before doing so is to make sure you have a GitHub account as this is the one used to authenticate in the Sandbox.
+```
+services: db: {
+  image: "ghcr.io/acorn-io/redis:v#.#.#-#"
+}
+```
 
-When running in the Sandbox, an application will be automatically shutdown after 2 hours. If you need your app to keep running, you may consider to upgrade to the Acorn Pro plan.
+Next we define the application container:
+
+```
+containers: app: {
+	build: {
+		context: "."
+		target:  "dev"
+	}
+	consumes: ["db"]
+	ports: publish: "8000/http"
+	env: {
+		REDIS_HOST: "@{service.db.address}"
+		REDIS_PASS: "@{service.db.secrets.admin.token}"
+	}
+}
+```
+
+This container is built using the Dockerfile in the examples folder. Once built, the container consumes the Redis service using the address and admin password provided through dedicated variables:
+- @{service.db.address}
+- @{service.db.secrets.admin.token}
+
+This example can be run with the following command (to be run from the *examples* folder)
+
+```
+acorn run -n app
+```
+
+After a few tens of seconds an http endpoint will be returned. Using this endpoint we can access the application and see the counter incremented on each reload of the page.
+
+
+## Deploy the app to your Acorn Sandbox
+
+Instead of managing your own Acorn installation, you can deploy this application in the Acorn Sandbox, the free SaaS offering provided by Acorn. Access to the sandbox requires only a GitHub account, which is used for authentication.
+
+[![Run in Acorn](https://acorn.io/v1-ui/run/badge?image=ghcr.io+acorn-io+redis+examples:v%23.%23.%23-%23)](https://acorn.io/run/ghcr.io/acorn-io/redis/examples:v%23.%23.%23-%23)
+
+An application running in the Sandbox will automatically shut down after 2 hours, but you can use the Acorn Pro plan to remove the time limit and gain additional functionalities.
