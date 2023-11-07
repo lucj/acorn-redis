@@ -10,7 +10,7 @@ This Redis instance:
 - is backed by a persistent volume
 - uses a default (auto generated) password for the admin user
 
-The Acorn image of this service is hosted in GitHub container registry at [ghcr.io/acorn-io/redis](ghcr.io/acorn-io/redis). 
+The Acorn image of this service is hosted in GitHub container registry at [ghcr.io/acorn-io/redis:v#.#-#](ghcr.io/acorn-io/redis). 
 
 Currently this Acorn does not have any configuration options, but some will be added later on like:
 - the possibility to indicate the Redis version to use
